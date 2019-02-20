@@ -1,0 +1,23 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+sub, sup {
+  font-size: 80%;
+  line-height: np0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+table {
+  font-size: 80%;
+}

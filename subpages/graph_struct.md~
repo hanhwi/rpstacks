@@ -1,0 +1,39 @@
+## Dependence Graph
+
+### Dependence Graph for Out-of-order Superscalar
+
+| Constraint | Edge | Description |
+| In-order fetch | I$<sub>i-1</sub>&rarr;F<sub>i</sub> | |
+| Finite fetch bandwidth | I$<sub>i-fbw</sub>&rarr;F<sub>i</sub> | where _fbw_ is the maximum number of instructions that can be fetched in a cycle |
+
+| Finite fetch buffer size | N<sub>i-fbs</sub>&rarr;F<sub>i</sub> | where _fbs_ is the fetch buffer size |
+| Control dependency | I<sub>i-1</sub>&rarr;F<sub>i</sub> | inserted if instruction _i_ - 1 is mispredicted branch |
+| ITLB access latency | F<sub>i</sub>&rarr;ITLB<sub>i</sub> | is 0 in case of ITLB hit |
+| I$ access latency | ITLB<sub>i</sub>&rarr;I$<sub>i</sub> | is 0 in case of I$ hit 
+| Rename after I$ access | I$<sub>i</sub>&rarr;N<sub>i</sub> | 
+| In-order rename | N<sub>i-1</sub>&rarr;N<sub>i</sub> |
+| Finite reorder buffer| C<sub>i-rbs</sub>&rarr;N<sub>i</sub> | where _rbs_ is the re-order buffer size 
+| Finite rename bandwidth | N<sub>i-nbw</sub>&rarr;N<sub>i</sub> | where _nbw_ is the maximum number of instruction that can be processed at the rename stage in a cycle
+| Dispatch after rename | N<sub>i</sub>&rarr;D<sub>i</sub> | 
+| In-order dispatch | D<sub>i-1</sub>&rarr;D<sub>i</sub> |
+| Issue dependency | E<sub>j</sub>&rarr;D<sub>i</sub> | prefer to select instruction _j_ waiting for the result of an optimizable long-latency instruction (modeling the issue dynamics) |
+| Finite dispatch width| D<sub>i-dbw</sub>&rarr;D<sub>i</sub> | where _dbw_ is the maximum number of instructions which can be dispatched in a cycle 
+| Ready after dispatch | D<sub>i</sub>&rarr;AR1<sub>i</sub> | 
+| Data dependency | P<sub>j</sub>&rarr;AR1<sub>i</sub> | inserted if a ld/st instruction _i_ depends on previous instruction  _j_'s result for address calculation
+| Address calculation | AR1<sub>i</sub>&rarr;AR2<sub>i</sub> |
+| DTLB access latency | AR2<sub>i</sub>&rarr;DTLB<sub>i</sub> |
+| Ready after dispatch | D<sub>i</sub>&rarr;R<sub>i</sub> | 
+| Finite physical registers | C<sub>j</sub>&rarr;R<sub>i</sub> | inserted if instruction _j_ releases the physical register instruction _i_ will use
+| Data dependency | P<sub>j</sub>&rarr;<sub>R</sub><sub>i</sub>| inserted if instruction _i_ depends on previous instruction _j_'s result
+| Ready after DTLB access | DTLB<sub>i</sub>&rarr;R<sub>i</sub> | inserted if the instruction _i_ is load or store
+| Execute after ready | R<sub>i</sub>&rarr;E<sub>i</sub> | 
+| Address dependency | E<sub>j</sub>&rarr;E<sub>i</sub>| every load _i_ can be executed after all stores _j_  $<$  _i_ be executed or at the same time 
+| Completion after execute | E<sub>i</sub>&rarr;P<sub>i</sub> |
+| Cache line sharing | P<sub>j</sub>&rarr;P<sub>i</sub> | inserted if load _i_ and load _j_ has the same address 
+| In-order commit | C<sub>i-1</sub>&rarr;RC<sub>i</sub>|
+| Finite commit width | C<sub>i-cbw</sub>&rarr;RC<sub>i</sub> |
+| uop dependecy | P<sub>j</sub>&rarr;<sub>RC</sub><sub>som</sub>| inserted for all instruction _j_ $>=$ p _som_ where _som_ is start of macro op instruction
+| Commit latency | RC<sub>i</sub>&rarr;<sub>C</sub><sub>i</sub>	   | |
+
+Node descriptions: F, start of instruction fetch; ITLB, ITLB access done; I\$, I-Cache access done; N, register renaming and re-order buffer entry allocation; D, issue queue entry allocation; AR1, all data operands for address calculation ready, except address calculation unit; AR2, address calculation; DTLB, DTLB access done; R, all data operands ready, except functional unit; E, execution; P, execution complete; RC, ready to commit; C, commit.
+

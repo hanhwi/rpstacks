@@ -1,0 +1,12 @@
+theme: jekyll-theme-slate
+title: RpStacks
+description: "Fast and Accurate Processor Design Space Exploration With Representative Stall-Event Stacks."
+show_downloads: "true"
+repository: "hanhwi/rpstacks"
+github:
+  tar_url: download/rpstacks.tar.gz
+  zip_url: download/rpstacks.tar.gz
+
+exclude:
+  - "#*"
+  - "*~"
